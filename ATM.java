@@ -66,13 +66,23 @@ public class ATM {
 			System.out.println("\t7. Account Balances");
 			System.out.println("\t8. CANCEL");
 			int trCode = Integer.parseInt(keyboard.nextLine().trim());
-			
-			if(trCode == 8) break;
+
+			if (trCode == 7)
+			{
+				showBalances(customer);
+				break;
+			}
+			else if (trCode == 8) break;
 			// TODO
 			// if trCode is 7, call showBalances, then break;
 			// if trCode < 1 or trCode > 8
 			// print "Please select a value between 1 and 7", then continue (NOT break)
-
+			else if (trCode < 1 || trCode > 8)
+			{
+				System.out.println("Please select a value between 1 and 7");
+				continue;
+			}
+			
 			System.out.println("How much?");
 			double amount = Double.parseDouble(keyboard.nextLine().trim());
 			ATMtransaction transact = map.get(trCode);
