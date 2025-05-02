@@ -13,6 +13,8 @@ public class CustomerSelectedState implements ServerState {
 	public ServerState nextState() throws Exception {
 		// you use ownerThread.getOutObjStream() and ownerThread.getInObjStream()
 		// to get the streams when needed
+		ObjectOutputStream streamOut = ownerThread.getOutObjStream();
+		ObjectInputStream streamIn = ownerThread.getInObjStream();
 		streamOut.reset(); //<<<<<<<<<<<<<<<<<<<<< MAJOR IMPORTANCE
 		// with this reset command, we force Java to re-serialize the
 		// Customer object, which has new values in its accounts.
@@ -20,18 +22,30 @@ public class CustomerSelectedState implements ServerState {
 		// with the old balances.
 		
 		// use writeObject to send out ownerThread.getCustomer() 
-		
+		streamOut.writeObject(ownerThread.getCustomer());
 		// use readObject to get the response. Declare the response
 		// as class Object because we are not sure what it is.
-		
+		Object response = streamIn.readObject();
+
 		// if response is null just return ownerThread.CUSTOMER_SELECTED, the ATM
 		// did an operation that did generate a transaction
+		if (response == null) return ownerThread.CUSTOMER_SELECTED;
 
+		if (response instanceof BankTransaction transaction)
+		{
+			ownerThread.doTransaction(transaction);
+			return ownerThread.CUSTOMER_SELECTED;
+		}
 		// if (response instanceof BankTransaction)
 		// cast the response to a BankTransaction: (BankTransaction)response and 
 		// pass it to the doTransaction method in ownerThread, 
 		// return ownerThread.CUSTOMER_SELECTED
-		
+
+		if (response instanceof String str && str.equals("END"))
+		{
+			ownerThread.setDoingTransactions(false);
+			return ownerThread.CUSTOMER_SELECTED;
+		}
 		// if (response instanceof String), cast the response to String str
 		// and if str.equals("END") set doingTransactions to false in ownerTread,
 		// return ownerThread.CUSTOMER_SELECTED;
