@@ -68,27 +68,41 @@ public class AccountServerThread extends Thread {
 			}
 		return outObjectStream;
 	}
-	public void doTransaction(BankTransaction trIn) {
-		BankAccount savings = customer.getSavings();
-		BankAccount checking = customer.getChecking();
-		switch(trIn.transactionCode()) {
-		case 1: 
-			// TODO: deposit trIn.transactionAmount() in savings
-			break;
-		case 2: 
-			// TODO: deposit trIn.transactionAmount() in checking
-			break;
-		case 3: 
-			// TODO do withdraw
-			break;
-		case 4: 
-			// TODO do withdraw
-			break;
-		case 5: 
-			// TODO withdraw from savings, deposit in checking
-			break;
-		case 6: 
-			// TODO the opposite transfer from 5
-		}
-	}
+	public void doTransaction(BankTransaction tr) {
+        double amount        = tr.transactionAmount();
+        BankAccount savings  = customer.getSavings();
+        BankAccount checking = customer.getChecking();
+
+        switch (tr.transactionCode()) {
+            case 1:  // deposit → savings
+                if (savings != null) savings.deposit(amount);
+                break;
+
+            case 2:  // deposit → checking
+                if (checking != null) checking.deposit(amount);
+                break;
+
+            case 3:  // withdraw ← savings
+                if (savings != null) savings.withdraw(amount);
+                break;
+
+            case 4:  // withdraw ← checking
+                if (checking != null) checking.withdraw(amount);
+                break;
+
+            case 5:  // transfer savings → checking
+                if (savings != null && checking != null && savings.withdraw(amount))
+                    checking.deposit(amount);
+                break;
+
+            case 6:  // transfer checking → savings
+                if (checking != null && savings != null && checking.withdraw(amount))
+                    savings.deposit(amount);
+                break;
+
+            default:
+                if (Server.DEBUG)
+                    System.out.println("Unknown transaction code: " + tr.transactionCode());
+        }
+    }
 }
