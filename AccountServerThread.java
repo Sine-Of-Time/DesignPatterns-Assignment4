@@ -91,13 +91,17 @@ public class AccountServerThread extends Thread {
                 break;
 
             case 5:  // transfer savings → checking
-                if (savings != null && checking != null && savings.withdraw(amount))
-                    checking.deposit(amount);
+                if (savings != null && checking != null && savings.getBalance() >= amount + 1){
+					savings.withdraw(amount);
+					checking.deposit(amount);
+				}
                 break;
 
             case 6:  // transfer checking → savings
-                if (checking != null && savings != null && checking.withdraw(amount))
-                    savings.deposit(amount);
+                if (checking != null && savings != null && checking.getBalance() >= amount + 1){
+					checking.withdraw(amount);
+					savings.deposit(amount);
+				}
                 break;
 
             default:
