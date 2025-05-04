@@ -20,6 +20,12 @@ public enum ATMtransaction {
 		boolean doable(Double amountIn, Customer customer) {
 			amount = amountIn;
 			// TODO does the account exist?
+
+			if(customer.getChecking() == null){
+				return false;
+			}
+
+			return true;
 		}
 		@Override
 		double getAmount() {
@@ -32,6 +38,15 @@ public enum ATMtransaction {
 			amount = amountIn;
 			// TODO does the account exist and if so is there enough money?
 			// make sure $1 will be left in the account
+
+			if(customer.getSavings() == null){
+				return false;
+			}
+			if(customer.getSavings().getBalance() - amount < 1.0){
+				return false;
+			}
+
+			return true;
 		}
 		@Override
 		double getAmount() {
@@ -44,6 +59,15 @@ public enum ATMtransaction {
 			amount = amountIn;
 			// TODO does the account exist and if so is there enough money?
 			// make sure $1 will be left in the account
+
+			if(customer.getChecking() == null){
+				return false;
+			}
+			if(customer.getChecking().getBalance() - amount < 1.0){
+				return false;
+			}
+
+			return true;
 		}
 		@Override
 		double getAmount() {
@@ -57,6 +81,15 @@ public enum ATMtransaction {
 			// TODO do both accounts exist and if so is there enough money
 			// in the account that is withdrawn from?
 			// make sure $1 will be left in that account
+
+			if(customer.getSavings() == null || customer.getChecking() == null){
+				return false;
+			}
+			if(customer.getSavings().getBalance() - amount < 1.0){
+				return false;
+			}
+
+			return true;
 		}
 		@Override
 		double getAmount() {
@@ -70,6 +103,15 @@ public enum ATMtransaction {
 			// TODO do both accounts exist and if so is there enough money
 			// in the account that is withdrawn from?
 			// make sure $1 will be left in that account
+
+			if(customer.getSavings() == null || customer.getChecking() == null){
+				return false;
+			}
+			if(customer.getChecking().getBalance() - amount < 1.0){
+				return false;
+			}
+
+			return true;
 		}
 		@Override
 		double getAmount() {
