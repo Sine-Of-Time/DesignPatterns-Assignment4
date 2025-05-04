@@ -29,7 +29,7 @@ public class Server {
 		p = new Person("name5", "1-5-20", "123-456-7895");
 		sAcc = new SavingsAccount(500); 
 		cAcc = null;
-		customers.put(4, new Customer(p, sAcc, cAcc, 4));
+		customers.put(5, new Customer(p, sAcc, cAcc, 5));
 
 		try (ServerSocket serverSocket = new ServerSocket(6000)) {
 			while (listening) {
