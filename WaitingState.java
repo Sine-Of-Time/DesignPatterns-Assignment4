@@ -14,6 +14,13 @@ public class WaitingState implements ServerState {
 		// the ATM should send back the account id as a string, so
 		// use readObject() to read the input stream, cast it to (String), then
 		// use Integer.parseInt() to extract the int value i.
+
+		ObjectOutputStream outStream = ownerThread.getOutObjStream();
+		ObjectInputStream inStream = ownerThread.getInObjStream();
+		outStream.writeObject("ACCOUNT NUMBER");
+		String ret = (String) inStream.readObject();
+		int i = Integer.parseInt(ret);
+
 		ownerThread.selectCustomer(i);
 		return ownerThread.CUSTOMER_SELECTED;
 	}
